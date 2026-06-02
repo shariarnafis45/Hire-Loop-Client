@@ -19,6 +19,7 @@ import { FaGoogle, FaGithub } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -277,12 +278,12 @@ const SignupPage = () => {
 
         <p className="text-center mt-8 text-[14px] font-medium text-zinc-500 dark:text-zinc-400">
           Already have an account?{" "}
-          <a
-            href="#"
+          <Link
+            href="/auth/signin"
             className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline transition-all"
           >
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

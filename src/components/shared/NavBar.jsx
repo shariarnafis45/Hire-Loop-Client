@@ -85,7 +85,7 @@ const NavBar = () => {
             <div className="h-5 w-px bg-zinc-200 dark:bg-white/10" />
 
             <Link
-              href="/login"
+              href="/auth/signin"
               className="
                 text-sm font-medium
                 text-violet-600 dark:text-violet-400
@@ -99,7 +99,7 @@ const NavBar = () => {
             <div className="h-5 w-px bg-zinc-200 dark:bg-white/10" />
 
             <Link
-              href="/register"
+              href="/auth/signup"
               className="
                 inline-flex h-11 items-center justify-center
                 rounded-xl
@@ -181,13 +181,10 @@ const NavBar = () => {
               ))}
             </div>
 
-            
-
             {/* Auth Buttons */}
             <div className="flex flex-col gap-3">
               <Link
-                href="/login"
-                onClick={() => setOpen(false)}
+                href="/auth/signin"
                 className="
                   rounded-xl
                   px-4 py-3
@@ -200,8 +197,7 @@ const NavBar = () => {
               </Link>
 
               <Link
-                href="/register"
-                onClick={() => setOpen(false)}
+                href="/auth/signup"
                 className="
                   rounded-xl
                   bg-violet-600
