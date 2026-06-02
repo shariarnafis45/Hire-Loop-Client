@@ -1,4 +1,4 @@
-"use client";
+
 
 import { FiSearch, FiMapPin, FiBriefcase, FiStar, FiActivity } from "react-icons/fi";
 import { HiMiniMagnifyingGlass, HiOutlineBuildingOffice2 } from "react-icons/hi2";
