@@ -3,6 +3,7 @@ import "./globals.css";
 import NavBar from "@/components/shared/NavBar";
 import { Providers } from "@/lib/ThemeProvider";
 import Footer from "@/components/shared/Footer";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,8 @@ export default function RootLayout({ children }) {
         <Providers>
           <NavBar />
           <main>{children}</main>
-          <Footer/>
+          <Footer />
+          <Toaster position="bottom-center" reverseOrder={false} />
         </Providers>
       </body>
     </html>
