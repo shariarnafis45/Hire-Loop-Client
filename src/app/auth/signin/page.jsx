@@ -11,6 +11,7 @@ import {
   FiXCircle,
 } from "react-icons/fi";
 import { FaGoogle, FaGithub } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -95,7 +96,6 @@ const SigninPage = () => {
       ));
       router.push("/");
       
-
       setFormData({ email: "", password: "" });
     } catch (error) {
       toast.dismiss(loadingToast);
@@ -105,21 +105,36 @@ const SigninPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#f8fafc] dark:bg-[#030303] flex items-center justify-center py-34 px-4 overflow-hidden font-sans transition-colors duration-500">
-      {/* 1. Consistent Background Mesh Grid */}
+    <div className="relative min-h-screen w-full bg-[#f8fafc] dark:bg-[#030303] flex items-center justify-center py-30 px-4 overflow-hidden font-sans transition-colors duration-500">
+      {/* Consistent Background Mesh Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
-      {/* Dynamic Ambient Blur Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.05),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.1),transparent_60%)] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.05),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.08),transparent_60%)] pointer-events-none" />
+      {/* Ambient Blur Glows - Animated for a premium organic feel */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent_60%)] pointer-events-none" 
+      />
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.2 }}
+        className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.09),transparent_60%)] pointer-events-none" 
+      />
 
       {/* ================= MAIN SIGNIN CARD ================= */}
-      <div className="relative w-full max-w-[460px] p-8 sm:p-10 rounded-[28px] border border-white dark:border-white/[0.06] bg-white/70 dark:bg-[#0c0c0e]/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] transition-all duration-500 z-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="relative w-full max-w-[460px] p-8 sm:p-10 rounded-[28px] border border-white dark:border-white/[0.06] bg-white/70 dark:bg-[#0c0c0e]/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] z-10"
+      >
         
         {/* Header Block */}
         <div className="flex flex-col mb-8">
           <div className="flex items-center gap-2 mb-3">
-            <span className="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-500" />
+            <span className="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-500 animate-pulse" />
             <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
               Welcome Back
             </span>
@@ -194,10 +209,10 @@ const SigninPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-12 mt-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-[15px] shadow-[0_4px_20px_rgba(79,70,229,0.3)] hover:shadow-[0_4px_25px_rgba(79,70,229,0.5)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none"
+            className="w-full h-12 mt-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-[15px] shadow-[0_4px_20px_rgba(79,70,229,0.3)] hover:shadow-[0_4px_25px_rgba(79,70,229,0.5)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none group"
           >
             {isLoading ? "Signing in..." : "Sign in"}
-            {!isLoading && <FiArrowRight size={16} />}
+            {!isLoading && <FiArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />}
           </button>
         </form>
 
@@ -210,13 +225,13 @@ const SigninPage = () => {
           <div className="flex-grow border-t border-zinc-200 dark:border-white/[0.06]" />
         </div>
 
-        {/* Social Providers Block (Glassy Buttons) */}
+        {/* Social Providers Block (Glassy Buttons with scale interaction) */}
         <div className="grid grid-cols-2 gap-3.5">
-          <button className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white/50 dark:bg-white/[0.02] text-zinc-700 dark:text-zinc-300 text-[14px] font-bold hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:text-zinc-900 dark:hover:text-white transition-all duration-200 shadow-sm dark:shadow-none">
+          <button className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white/50 dark:bg-white/[0.02] text-zinc-700 dark:text-zinc-300 text-[14px] font-bold hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:text-zinc-900 dark:hover:text-white active:scale-[0.98] transition-all duration-200 shadow-sm dark:shadow-none">
             <FaGoogle className="text-red-500" size={16} />
             <span>Google</span>
           </button>
-          <button className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white/50 dark:bg-white/[0.02] text-zinc-700 dark:text-zinc-300 text-[14px] font-bold hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:text-zinc-900 dark:hover:text-white transition-all duration-200 shadow-sm dark:shadow-none">
+          <button className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white/50 dark:bg-white/[0.02] text-zinc-700 dark:text-zinc-300 text-[14px] font-bold hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:text-zinc-900 dark:hover:text-white active:scale-[0.98] transition-all duration-200 shadow-sm dark:shadow-none">
             <FaGithub size={16} />
             <span>GitHub</span>
           </button>
@@ -232,7 +247,7 @@ const SigninPage = () => {
             Sign up
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };
