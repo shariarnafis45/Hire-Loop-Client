@@ -1,6 +1,7 @@
 import CTASection from "@/components/home/CTASection";
 import Features from "@/components/home/Features";
 import HeroWithStats from "@/components/home/Hero";
+import PricingSection from "@/components/home/PricingSection";
 import React from "react";
 
 const HomePage = () => {
@@ -8,6 +9,7 @@ const HomePage = () => {
     <>
       <HeroWithStats />
       <Features/>
+      <PricingSection/>
       <CTASection/>
     </>
   );

@@ -102,7 +102,7 @@ const SignupPage = () => {
         </div>
       ));
       router.push("/");
-      router.refresh();
+     
 
       setFormData({ name: "", email: "", password: "" });
     } catch (error) {
@@ -219,7 +219,7 @@ const SignupPage = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="••••••••"
+                placeholder="Enter Your Password"
                 className="w-full pl-11 pr-12 py-3 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white/50 dark:bg-white/[0.01] text-zinc-800 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 text-[14.5px] font-medium outline-none transition-all duration-200 focus:border-indigo-500/50 dark:focus:border-indigo-500/50 focus:bg-white dark:focus:bg-white/[0.03] focus:shadow-[0_4px_20px_rgba(99,102,241,0.03)]"
               />
 

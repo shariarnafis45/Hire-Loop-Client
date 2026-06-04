@@ -1,16 +1,15 @@
 
-
-import { 
-  FiSearch, 
-  FiBookmark, 
-  FiFileText, 
-  FiMousePointer 
+import {
+  FiSearch,
+  FiBookmark,
+  FiFileText,
+  FiMousePointer,
 } from "react-icons/fi";
-import { 
-  TbChartLine, 
-  TbBuildingSkyscraper, 
-  TbHexagon, 
-  TbTrendingUp 
+import {
+  TbChartLine,
+  TbBuildingSkyscraper,
+  TbHexagon,
+  TbTrendingUp,
 } from "react-icons/tb";
 
 const featuresData = [
@@ -56,18 +55,16 @@ const featuresData = [
   },
 ];
 
-const Features = () => {
+const Features =  () => {
+  
   return (
     <section className="relative w-full bg-[#f8fafc] dark:bg-[#030303] py-24 overflow-hidden font-sans transition-colors duration-500">
-      
       {/* Background Decor (Matching previous sections) */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-[1180px] px-4 sm:px-6">
-        
         {/* Section Header */}
         <div className="flex flex-col items-center text-center mb-20">
-          
           {/* Top Label Tag */}
           <div className="flex items-center justify-center gap-3 mb-6 select-none">
             <div className="w-1.5 h-1.5 bg-indigo-600 dark:bg-indigo-500 rounded-[1px]" />
@@ -86,8 +83,8 @@ const Features = () => {
         {/* Features Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
           {featuresData.map((feature, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="group flex flex-row items-start gap-5 cursor-pointer"
             >
               {/* Glassy Icon Box */}
@@ -96,7 +93,7 @@ const Features = () => {
                   {feature.icon}
                 </div>
               </div>
-              
+
               {/* Text Content */}
               <div className="flex flex-col pt-1">
                 <h3 className="text-[16px] font-bold text-zinc-900 dark:text-zinc-100 mb-2 group-hover:text-indigo-600 dark:group-hover:text-white transition-colors">
@@ -109,7 +106,6 @@ const Features = () => {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
