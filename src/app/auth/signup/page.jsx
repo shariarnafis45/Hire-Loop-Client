@@ -10,6 +10,8 @@ import {
   FiArrowRight,
   FiCheckCircle,
   FiXCircle,
+  FiBriefcase,
+  FiSearch,
 } from "react-icons/fi";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -24,6 +26,7 @@ const SignupPage = () => {
     name: "",
     email: "",
     password: "",
+    role: "seeker", // Default role set to seeker
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +34,10 @@ const SignupPage = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRoleChange = (role) => {
+    setFormData({ ...formData, role });
   };
 
   const handleSubmit = async (e) => {
@@ -50,11 +57,12 @@ const SignupPage = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        role: formData.role, // Added role to payload
         callbackURL: "/",
       });
-      
+
       toast.dismiss(loadingToast);
-      
+
       if (error) {
         toast.custom((t) => (
           <div
@@ -99,7 +107,7 @@ const SignupPage = () => {
       ));
       router.push("/");
 
-      setFormData({ name: "", email: "", password: "" });
+      setFormData({ name: "", email: "", password: "", role: "seeker" });
     } catch (error) {
       toast.dismiss(loadingToast);
     } finally {
@@ -108,33 +116,31 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#f8fafc] dark:bg-[#030303] flex items-center justify-center py-30 px-4 overflow-hidden font-sans transition-colors duration-500">
-      
+    <div className="relative min-h-screen w-full bg-[#f8fafc] dark:bg-[#030303] flex items-center justify-center py-20 px-4 overflow-hidden font-sans transition-colors duration-500">
       {/* Consistent Background Mesh Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       {/* Ambient Blur Glows - Animated for a premium organic feel */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent_60%)] pointer-events-none" 
+        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent_60%)] pointer-events-none"
       />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.2 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.09),transparent_60%)] pointer-events-none" 
+        className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.09),transparent_60%)] pointer-events-none"
       />
 
       {/* ================= MAIN SIGNUP CARD ================= */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="relative w-full max-w-[460px] p-8 sm:p-10 rounded-[28px] border border-white dark:border-white/[0.06] bg-white/70 dark:bg-[#0c0c0e]/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] z-10"
       >
-        
         {/* Header Block */}
         <div className="flex flex-col mb-8">
           <div className="flex items-center gap-2 mb-3">
@@ -153,6 +159,38 @@ const SignupPage = () => {
 
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          
+          {/* Custom Segmented Radio Toggle for Role */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-[12px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+              I am a
+            </label>
+            <div className="flex p-1 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-zinc-100/50 dark:bg-white/[0.02]">
+              <button
+                type="button"
+                onClick={() => handleRoleChange("seeker")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-[13.5px] font-bold rounded-lg transition-all duration-300 ${
+                  formData.role === "seeker"
+                    ? "bg-white dark:bg-[#1a1a1f] text-indigo-600 dark:text-indigo-400 shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-zinc-200/50 dark:border-white/[0.05]"
+                    : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300 transparent border border-transparent"
+                }`}
+              >
+                <FiSearch size={16} /> Job Seeker
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRoleChange("recruiter")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-[13.5px] font-bold rounded-lg transition-all duration-300 ${
+                  formData.role === "recruiter"
+                    ? "bg-white dark:bg-[#1a1a1f] text-indigo-600 dark:text-indigo-400 shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-zinc-200/50 dark:border-white/[0.05]"
+                    : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300 transparent border border-transparent"
+                }`}
+              >
+                <FiBriefcase size={16} /> Recruiter
+              </button>
+            </div>
+          </div>
+
           {/* Input: Full Name */}
           <div className="flex flex-col space-y-1.5">
             <label className="text-[12px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
