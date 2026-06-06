@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "@/lib/auth-client"; // Tumar auth client
+import { useSession } from "@/lib/auth-client"; 
 import StatCard from "@/components/dashboard/StatCard";
 import { FileText, Users, Zap, CheckCircle2 } from "lucide-react";
 import RecentApplications from "@/components/dashboard/RecentApplications";
@@ -63,7 +63,7 @@ const RecruiterDashboard = () => {
             icon={stat.icon}
             trend={stat.trend}
             trendUp={stat.trendUp}
-            delay={index * 0.1} // Staggered animation er jonno
+            delay={index * 0.1} 
           />
         ))}
       </div>
