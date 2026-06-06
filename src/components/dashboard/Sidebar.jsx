@@ -2,35 +2,40 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Building2, 
-  Briefcase, 
-  FileText, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Building2,
+  Briefcase,
+  FileText,
+  Settings,
   X,
   LogOut,
   Crown,
-  CheckCircle 
+  CheckCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
+import { authClient, useSession } from "@/lib/auth-client";
 
-import { authClient, useSession } from "@/lib/auth-client"; 
-
+// Recruiter sidebar links
 const sidebarLinks = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "My Company", href: "/dashboard/company", icon: Building2 },
-  { name: "Manage Jobs", href: "/dashboard/jobs", icon: Briefcase },
-  { name: "Applications", href: "/dashboard/applications", icon: FileText, badge: "12" }, 
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Dashboard", href: "/dashboard/recruiter", icon: LayoutDashboard },
+  { name: "My Company", href: "/dashboard/recruiter/company", icon: Building2 },
+  { name: "Manage Jobs", href: "/dashboard/recruiter/jobs", icon: Briefcase },
+  {
+    name: "Applications",
+    href: "/dashboard/recruiter/applications",
+    icon: FileText,
+    badge: "12",
+  },
+  { name: "Settings", href: "/dashboard/recruiter/settings", icon: Settings },
 ];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
   const router = useRouter();
-  
+
   // Fetching real user from Better Auth
   const { data: session, isPending } = useSession();
   const user = session?.user;
@@ -38,9 +43,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   // Fallback Initials
   const getInitials = (name) => {
     if (!name) return "U";
-    return name.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
   };
-
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -62,7 +71,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </div>
     ));
     setIsOpen(false);
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -88,10 +97,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               loop
             </span>
           </Link>
-          
+
           {/* Mobile Close Button */}
-          <button 
-            onClick={() => setIsOpen(false)} 
+          <button
+            onClick={() => setIsOpen(false)}
             className="md:hidden p-1.5 rounded-md bg-zinc-100 dark:bg-white/5 text-zinc-500 hover:text-zinc-800 dark:hover:text-white transition-colors"
           >
             <X size={18} />
@@ -101,9 +110,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         {/* Navigation Links */}
         <nav className="flex-1 overflow-y-auto space-y-1 custom-scrollbar">
           {sidebarLinks.map((item) => {
-            const active = pathname === item.href;
+            const isDashboardHome =
+              item.href === "/dashboard/recruiter" ||
+              item.href === "/dashboard/seeker";
+
+            const active = isDashboardHome
+              ? pathname === item.href
+              : pathname.startsWith(item.href);
+
             const Icon = item.icon;
-            
             return (
               <Link
                 key={item.href}
@@ -123,29 +138,37 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                      }}
                     >
-                      <motion.div 
+                      <motion.div
                         className="absolute right-0 top-0 bottom-0 w-[3px] bg-zinc-900 dark:bg-white rounded-l-full"
                         layoutId="sidebarIndicator"
                       />
                     </motion.div>
                   )}
                 </AnimatePresence>
-                
+
                 <div className="flex items-center gap-3.5 relative z-10">
-                  <Icon 
-                    size={18} 
+                  <Icon
+                    size={18}
                     strokeWidth={active ? 2.5 : 2}
-                    className={`transition-colors duration-300 ${active ? "text-zinc-900 dark:text-white" : "group-hover:text-zinc-800 dark:group-hover:text-zinc-300"}`} 
+                    className={`transition-colors duration-300 ${active ? "text-zinc-900 dark:text-white" : "group-hover:text-zinc-800 dark:group-hover:text-zinc-300"}`}
                   />
-                  <span className="relative z-10 tracking-wide">{item.name}</span>
+                  <span className="relative z-10 tracking-wide">
+                    {item.name}
+                  </span>
                 </div>
 
                 {item.badge && (
-                  <span className={`relative z-10 text-[11px] px-2 py-0.5 rounded-full font-semibold
+                  <span
+                    className={`relative z-10 text-[11px] px-2 py-0.5 rounded-full font-semibold
                     ${active ? "bg-zinc-900 text-white dark:bg-white dark:text-black" : "bg-zinc-200 text-zinc-600 dark:bg-white/10 dark:text-zinc-400"}
-                  `}>
+                  `}
+                  >
                     {item.badge}
                   </span>
                 )}
@@ -168,18 +191,22 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
           ) : user ? (
             // Added onClick={handleLogout} here
-            <button 
+            <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-100/80 dark:hover:bg-white/[0.04] transition-all duration-300 group outline-none text-left"
             >
               <div className="w-10 h-10 rounded-full bg-zinc-800 dark:bg-zinc-800 flex items-center justify-center text-white font-medium text-sm shadow-sm shrink-0 overflow-hidden border border-zinc-200 dark:border-zinc-700/50 relative">
                 {user.image ? (
-                  <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+                  <img
+                    src={user.image}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span>{getInitials(user.name)}</span>
                 )}
               </div>
-              
+
               <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-semibold text-zinc-900 dark:text-white truncate leading-tight">
                   {user.name}
@@ -192,7 +219,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 </div>
               </div>
 
-              <LogOut size={16} className="text-zinc-400 group-hover:text-red-500 transition-colors shrink-0 mr-1" />
+              <LogOut
+                size={16}
+                className="text-zinc-400 group-hover:text-red-500 transition-colors shrink-0 mr-1"
+              />
             </button>
           ) : (
             <div className="w-full text-center text-xs text-zinc-500 py-3 font-medium">
