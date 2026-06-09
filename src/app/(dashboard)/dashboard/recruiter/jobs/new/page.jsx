@@ -61,11 +61,17 @@ export default function RecruiterNewJobPost() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // TODO: Replace this mock ID with the actual company ID from your Auth context/session later.
+    const mockCompanyId = "comp_mock_98765xyz";
+    const status = "active";
+
     const finalJobData = {
       ...formData,
       jobType,
       isRemote,
       location: isRemote ? "Remote Worldwide" : formData.location,
+      companyId: mockCompanyId, // <-- Mock Company ID added here
+      status: status,
     };
 
     try {
@@ -199,7 +205,7 @@ export default function RecruiterNewJobPost() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
             {/* Job Title */}
             <div className="md:col-span-2">
-              <label>Job Title *</label>
+              <Label>Job Title *</Label>
               <div className="relative">
                 <Briefcase
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -217,9 +223,9 @@ export default function RecruiterNewJobPost() {
               </div>
             </div>
 
-            {/* Category Dropdown (Fixed UX) */}
+            {/* Category Dropdown */}
             <div>
-              <label>Category *</label>
+              <Label>Category *</Label>
               <div className="relative">
                 <LayoutGrid
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -246,7 +252,7 @@ export default function RecruiterNewJobPost() {
 
             {/* Application Deadline */}
             <div>
-              <label>Application Deadline *</label>
+              <Label>Application Deadline *</Label>
               <div className="relative">
                 <Calendar
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -265,7 +271,7 @@ export default function RecruiterNewJobPost() {
 
             {/* Job Type Pills */}
             <div className="md:col-span-2">
-              <label>Job Type *</label>
+              <Label>Job Type *</Label>
               <div className="flex flex-wrap gap-2.5">
                 {jobTypes.map((type) => (
                   <button
@@ -332,10 +338,10 @@ export default function RecruiterNewJobPost() {
               </div>
             </div>
 
-            {/* Location & Remote Toggle - Perfect 50px Alignment */}
+            {/* Location & Remote Toggle */}
             <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 items-end">
               <div className="flex-1 w-full">
-                <label>Location</label>
+                <Label>Location</Label>
                 <div className="relative">
                   <MapPin
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
@@ -399,7 +405,7 @@ export default function RecruiterNewJobPost() {
 
           <div className="space-y-6">
             <div>
-              <label>Responsibilities *</label>
+              <Label>Responsibilities *</Label>
               <textarea
                 name="responsibilities"
                 required
@@ -411,7 +417,7 @@ export default function RecruiterNewJobPost() {
             </div>
 
             <div>
-              <label>Requirements *</label>
+              <Label>Requirements *</Label>
               <textarea
                 name="requirements"
                 required
@@ -423,7 +429,7 @@ export default function RecruiterNewJobPost() {
             </div>
 
             <div>
-              <label optional>Benefits & Perks</label>
+              <Label optional>Benefits & Perks</Label>
               <textarea
                 name="benefits"
                 value={formData.benefits}
