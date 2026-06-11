@@ -21,7 +21,7 @@ import { authClient, useSession } from "@/lib/auth-client";
 // Recruiter sidebar links
 const sidebarLinks = [
   { name: "Dashboard", href: "/dashboard/recruiter", icon: LayoutDashboard },
-  { name: "My Company", href: "/dashboard/recruiter/company", icon: Building2 },
+  { name: "My Company", href: "/dashboard/recruiter/companies", icon: Building2 },
   { name: "Manage Jobs", href: "/dashboard/recruiter/jobs", icon: Briefcase },
   {
     name: "Applications",
