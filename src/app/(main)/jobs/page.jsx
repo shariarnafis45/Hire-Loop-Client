@@ -1,6 +1,7 @@
+import BrowseJobsWrapper from '@/components/jobs/BrowseJobsWrapper';
 import { getJobs } from '@/lib/api/jobs';
 import React from 'react';
-import BrowseJobsWrapper from './BrowseJobsPage';
+
 
 
 const BrowseJobsPage = async () => {
