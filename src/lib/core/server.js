@@ -10,3 +10,7 @@ export const serverMuting = async (path, data) => {
   });
   return res.json();
 };
+export const serverFetch = async (path) => {
+  const res = await fetch(`${serverUrl}${path}`);
+  return res.json();
+};

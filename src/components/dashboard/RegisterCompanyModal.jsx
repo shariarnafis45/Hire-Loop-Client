@@ -10,21 +10,24 @@ import {
   Users,
   Loader2,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import toast from "react-hot-toast"; // assuming you have react-hot-toast
+import toast from "react-hot-toast";
 import { addCompany } from "@/lib/actions/company";
+import { useRouter } from "next/navigation";
 
 export default function RegisterCompanyModal({
   isOpen,
   onClose,
   initialData = null,
+  recruiter,
 }) {
   const isEditMode = !!initialData;
   const fileInputRef = useRef(null);
-
+  const router = useRouter();
   // Form State
   const [formData, setFormData] = useState({
     name: "",
@@ -83,7 +86,7 @@ export default function RegisterCompanyModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Imgbb Upload Logic
+  // Imgbb Upload Logic with Custom Toast
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -95,7 +98,6 @@ export default function RegisterCompanyModal({
       const imageFormData = new FormData();
       imageFormData.append("image", file);
 
-      // Imgbb API Call (Replace API_KEY in your .env)
       const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: "POST",
@@ -106,45 +108,125 @@ export default function RegisterCompanyModal({
 
       if (data.success) {
         setFormData((prev) => ({ ...prev, logo: data.data.display_url }));
-        toast.success("Logo uploaded successfully!", { id: toastId });
+
+        // Custom Success Toast for Image
+        toast.dismiss(toastId);
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } flex items-center gap-3 max-w-sm w-full bg-white/80 dark:bg-[#0c0c0e]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] rounded-2xl p-4 border border-zinc-200 dark:border-white/[0.06]`}
+          >
+            <div className="flex-shrink-0 bg-emerald-100 dark:bg-emerald-500/20 p-2 rounded-full">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <p className="text-[14px] font-bold text-zinc-900 dark:text-white">
+                Logo Uploaded Successfully!
+              </p>
+              <p className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1">
+                Your company logo is ready.
+              </p>
+            </div>
+          </div>
+        ));
       } else {
         throw new Error("Upload failed");
       }
     } catch (error) {
-      toast.error("Failed to upload image. Check API key.", { id: toastId });
-      console.error(error);
+      // Custom Error Toast for Image
+      toast.dismiss(toastId);
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } flex items-center gap-3 max-w-sm w-full bg-white/80 dark:bg-[#0c0c0e]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] rounded-2xl p-4 border border-red-100 dark:border-red-900/30`}
+        >
+          <div className="flex-shrink-0 bg-red-100 dark:bg-red-500/20 p-2 rounded-full">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="text-[14px] font-bold text-zinc-900 dark:text-white">
+              Upload Failed
+            </p>
+            <p className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400 mt-0.5">
+              Failed to upload image. Check your connection.
+            </p>
+          </div>
+        </div>
+      ));
     } finally {
       setIsUploading(false);
     }
   };
 
-  // Form Submit Handler
+  // Form Submit Handler with Custom Toast & Edit Logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Format payload
     const payload = {
       ...formData,
       website: formData.website ? `https://${formData.website}` : "",
-      status: isEditMode ? initialData.status : "pending", // Keep old status if editing, otherwise pending
+      status: isEditMode ? initialData.status : "pending",
+      recruiterId: recruiter.id,
     };
 
     try {
-      addCompany(payload);
-      console.log("Submitting Data:", payload);
+      if (isEditMode) {
+        await updateCompany(initialData._id, payload);
+      } else {
+        await addCompany(payload);
+      }
 
-      // Simulate API delay
+      // Simulate API delay (Remove this if your action returns a fast promise)
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      toast.success(
-        isEditMode
-          ? "Company updated successfully!"
-          : "Company registered and pending approval!",
-      );
-      onClose(); // Modal close kore dibo
+      // Custom Success Toast
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } flex items-center gap-3 max-w-sm w-full bg-white/80 dark:bg-[#0c0c0e]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] rounded-2xl p-4 border border-zinc-200 dark:border-white/[0.06]`}
+        >
+          <div className="flex-shrink-0 bg-emerald-100 dark:bg-emerald-500/20 p-2 rounded-full">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div>
+            <p className="text-[14px] font-bold text-zinc-900 dark:text-white">
+              {isEditMode ? "Company Updated!" : "Registration Successful!"}
+            </p>
+            <p className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1">
+              {isEditMode
+                ? `"${formData.name}" has been updated.`
+                : `"${formData.name}" is pending approval.`}
+            </p>
+          </div>
+        </div>
+      ));
+
+      onClose();
+      router.refresh();
     } catch (error) {
-      toast.error("Something went wrong!");
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } flex items-center gap-3 max-w-sm w-full bg-white/80 dark:bg-[#0c0c0e]/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] rounded-2xl p-4 border border-red-100 dark:border-red-900/30`}
+        >
+          <div className="flex-shrink-0 bg-red-100 dark:bg-red-500/20 p-2 rounded-full">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="text-[14px] font-bold text-zinc-900 dark:text-white">
+              {isEditMode ? "Update Failed" : "Submission Failed"}
+            </p>
+            <p className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400 mt-0.5">
+              {error?.message || "Something went wrong. Please try again."}
+            </p>
+          </div>
+        </div>
+      ));
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +235,7 @@ export default function RegisterCompanyModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -342,7 +424,11 @@ export default function RegisterCompanyModal({
 
                     <div
                       onClick={() => fileInputRef.current.click()}
-                      className={`group/upload w-full flex items-center gap-4 p-3 bg-zinc-50/30 dark:bg-white/[0.01] border border-dashed rounded-xl cursor-pointer transition-colors duration-200 ${formData.logo ? "border-emerald-500/50" : "border-zinc-200 dark:border-white/[0.08] hover:border-zinc-400 dark:hover:border-white/20"}`}
+                      className={`group/upload w-full flex items-center gap-4 p-3 bg-zinc-50/30 dark:bg-white/[0.01] border border-dashed rounded-xl cursor-pointer transition-colors duration-200 ${
+                        formData.logo
+                          ? "border-emerald-500/50"
+                          : "border-zinc-200 dark:border-white/[0.08] hover:border-zinc-400 dark:hover:border-white/20"
+                      }`}
                     >
                       <div className="w-10 h-10 bg-white dark:bg-white/[0.03] shadow-sm rounded-lg flex items-center justify-center shrink-0 border border-zinc-100 dark:border-white/[0.05] overflow-hidden">
                         {isUploading ? (
@@ -367,7 +453,11 @@ export default function RegisterCompanyModal({
                       </div>
                       <div className="text-xs">
                         <p
-                          className={`font-semibold ${formData.logo ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-800 dark:text-zinc-200"}`}
+                          className={`font-semibold ${
+                            formData.logo
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-zinc-800 dark:text-zinc-200"
+                          }`}
                         >
                           {formData.logo
                             ? "Logo Uploaded"
