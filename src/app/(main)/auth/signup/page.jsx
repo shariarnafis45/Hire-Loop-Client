@@ -17,11 +17,14 @@ import { FaGoogle, FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const SignupPage = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -58,7 +61,7 @@ const SignupPage = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role, // Added role to payload
-        callbackURL: "/",
+      
       });
 
       toast.dismiss(loadingToast);
@@ -105,7 +108,7 @@ const SignupPage = () => {
           </div>
         </div>
       ));
-      router.push("/");
+      router.push(redirectTo);
 
       setFormData({ name: "", email: "", password: "", role: "seeker" });
     } catch (error) {
@@ -159,7 +162,6 @@ const SignupPage = () => {
 
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          
           {/* Custom Segmented Radio Toggle for Role */}
           <div className="flex flex-col space-y-2">
             <label className="text-[12px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
@@ -271,7 +273,12 @@ const SignupPage = () => {
             className="w-full h-12 mt-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-[15px] shadow-[0_4px_20px_rgba(79,70,229,0.3)] hover:shadow-[0_4px_25px_rgba(79,70,229,0.5)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none group"
           >
             {isLoading ? "Creating account..." : "Sign up"}
-            {!isLoading && <FiArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />}
+            {!isLoading && (
+              <FiArrowRight
+                size={16}
+                className="group-hover:translate-x-0.5 transition-transform"
+              />
+            )}
           </button>
         </form>
 

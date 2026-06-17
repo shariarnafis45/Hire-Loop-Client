@@ -14,11 +14,14 @@ import { FaGoogle, FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const SigninPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -47,11 +50,10 @@ const SigninPage = () => {
       const { data, error } = await authClient.signIn.email({
         email: formData.email,
         password: formData.password,
-        callbackURL: "/",
       });
-      
+
       toast.dismiss(loadingToast);
-      
+
       if (error) {
         toast.custom((t) => (
           <div
@@ -94,8 +96,8 @@ const SigninPage = () => {
           </div>
         </div>
       ));
-      router.push("/");
-      
+      router.push(redirectTo);
+
       setFormData({ email: "", password: "" });
     } catch (error) {
       toast.dismiss(loadingToast);
@@ -110,27 +112,26 @@ const SigninPage = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       {/* Ambient Blur Glows - Animated for a premium organic feel */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent_60%)] pointer-events-none" 
+        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.12),transparent_60%)] pointer-events-none"
       />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.2 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.09),transparent_60%)] pointer-events-none" 
+        className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] dark:bg-[radial-gradient(circle,rgba(79,70,229,0.09),transparent_60%)] pointer-events-none"
       />
 
       {/* ================= MAIN SIGNIN CARD ================= */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="relative w-full max-w-[460px] p-8 sm:p-10 rounded-[28px] border border-white dark:border-white/[0.06] bg-white/70 dark:bg-[#0c0c0e]/80 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.03)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] z-10"
       >
-        
         {/* Header Block */}
         <div className="flex flex-col mb-8">
           <div className="flex items-center gap-2 mb-3">
@@ -177,7 +178,10 @@ const SigninPage = () => {
               <label className="text-[12px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Password
               </label>
-              <Link href="/auth/forgot-password" className="text-[12px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+              <Link
+                href="/auth/forgot-password"
+                className="text-[12px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -212,7 +216,12 @@ const SigninPage = () => {
             className="w-full h-12 mt-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-[15px] shadow-[0_4px_20px_rgba(79,70,229,0.3)] hover:shadow-[0_4px_25px_rgba(79,70,229,0.5)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none group"
           >
             {isLoading ? "Signing in..." : "Sign in"}
-            {!isLoading && <FiArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />}
+            {!isLoading && (
+              <FiArrowRight
+                size={16}
+                className="group-hover:translate-x-0.5 transition-transform"
+              />
+            )}
           </button>
         </form>
 
@@ -241,7 +250,7 @@ const SigninPage = () => {
         <p className="text-center mt-8 text-[14px] font-medium text-zinc-500 dark:text-zinc-400">
           Don't have an account?{" "}
           <Link
-            href="/auth/signup"
+            href={`/auth/signup?redirect=${redirectTo}`}
             className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline transition-all"
           >
             Sign up

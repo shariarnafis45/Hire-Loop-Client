@@ -71,6 +71,7 @@ const NavBar = () => {
 
     setOpen(false);
     setIsDropdownOpen(false);
+    router.refresh()
   };
 
   return (

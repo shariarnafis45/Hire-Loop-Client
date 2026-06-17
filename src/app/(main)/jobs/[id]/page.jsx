@@ -199,10 +199,10 @@ const JobDetailsPage = async ({ params }) => {
                             </div>
 
                             {/* 🔥 Action Button */}
-                            <button className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white text-sm font-black rounded-xl shadow-lg shadow-indigo-600/20 transition-all duration-200 group/apply">
+                            <Link href={`/jobs/${id}/apply`} className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white text-sm font-black rounded-xl shadow-lg shadow-indigo-600/20 transition-all duration-200 group/apply">
                                 <span>Apply For This Position</span>
                                 <ArrowUpRight size={16} className="group-hover/apply:translate-x-0.5 group-hover/apply:-translate-y-0.5 transition-transform" />
-                            </button>
+                            </Link>
 
                             <p className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 text-center mt-3">
                                 Secure processing via {jobData.companyName} portal.
