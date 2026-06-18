@@ -4,6 +4,8 @@ import { getUserSession } from "@/lib/core/session";
 import { redirect } from "next/navigation";
 import React from "react";
 import JobApplyForm from "./JobApplyForm";
+import Link from "next/link";
+import { AlertTriangle, ArrowRight, Sparkles } from "lucide-react";
 
 import { FadeUpWrapper } from "@/components/animation/MotionWrappers";
 import { getapplicatAppliedJobs } from "@/lib/api/application";
@@ -20,38 +22,78 @@ const JobApplyPage = async ({ params }) => {
   const isSeeker = user.role === "seeker";
   const job = isSeeker ? await getSpecificJobById(id) : null;
   const applicantAppliedJobs = await getapplicatAppliedJobs(user.id);
-  console.log(applicantAppliedJobs);
+  
+  // Subscription Plan Config
   const plan = {
     type: "free",
     maxApplicationsCount: 3,
   };
-  const isLimitOver = applicantAppliedJobs.length >= plan.maxApplicationsCount;
+  
+  const currentCount = applicantAppliedJobs.length;
+  const isLimitOver = currentCount >= plan.maxApplicationsCount;
+  
   let renderContent;
 
   if (!isSeeker) {
     renderContent = <RecruiterApplyError userRole={user.role} jobId={id} />;
   } else if (isLimitOver) {
+    // Premium & Clean Limit Reached UI State
     renderContent = (
-      <div className="py-28 max-w-xl mx-auto px-4 text-center font-sans">
-        <div className="bg-white/70 dark:bg-[#09090b]/40 backdrop-blur-xl border border-zinc-200 dark:border-white/[0.05] rounded-[32px] p-8 sm:p-12 shadow-xl space-y-6">
-          <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-            </svg>
+      <div className="py-24 max-w-xl mx-auto px-4 text-center font-sans">
+        <div className="relative bg-white/80 dark:bg-[#09090b]/60 backdrop-blur-xl border border-zinc-200/80 dark:border-white/[0.06] rounded-[32px] p-8 sm:p-12 shadow-[0_24px_50px_-12px_rgba(0,0,0,0.05)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden">
+          
+          {/* Top Decorative Subtle Glow */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/10 dark:bg-amber-500/[0.06] blur-2xl rounded-full pointer-events-none" />
+
+          {/* Premium Icon Badge */}
+          <div className="relative w-16 h-16 bg-amber-500/10 text-amber-600 dark:text-amber-500 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/20 mb-8 shadow-inner">
+            <AlertTriangle size={28} strokeWidth={1.75} />
           </div>
-          <div className="space-y-2">
-            <h2 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight">
+
+          {/* Header Typography */}
+          <div className="space-y-3 mb-8">
+            <h2 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight sm:text-3xl">
               Application Limit Reached
             </h2>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-relaxed">
-              You have already applied to <span className="font-bold text-zinc-800 dark:text-zinc-200">{applicantAppliedJobs.length}/{plan.maxApplicationsCount}</span> jobs allowed on your current <span className="capitalize font-bold text-indigo-500">{plan.type}</span> tier.
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-relaxed max-w-sm mx-auto">
+              You've utilized all available slots on your current <span className="capitalize font-bold text-amber-600 dark:text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md">{plan.type}</span> tier. Upgrade to unlock unlimited leverage.
             </p>
           </div>
-          <div className="pt-2">
-            <button className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-[0.99]">
-              Upgrade Membership
-            </button>
+
+          {/* Visual Progress Meter */}
+          <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-white/[0.04] rounded-2xl p-5 mb-8 text-left">
+            <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+              <span>Monthly Quota</span>
+              <span className="text-zinc-900 dark:text-white font-black">{currentCount} / {plan.maxApplicationsCount} Used</span>
+            </div>
+            {/* Progress Bar Container */}
+            <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-500" 
+                style={{ width: `${Math.min((currentCount / plan.maxApplicationsCount) * 100, 100)}%` }}
+              />
+            </div>
           </div>
+
+          {/* Dynamic Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link 
+              href="/jobs" 
+              className="flex-1 order-2 sm:order-1 h-12 inline-flex items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-xs font-bold uppercase tracking-wider transition-all border border-transparent dark:border-zinc-800/60"
+            >
+              Explore Other Jobs
+            </Link>
+
+            <Link 
+              href="/pricing" 
+              className="flex-1 order-1 sm:order-2 h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-black text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-indigo-600/10 dark:shadow-none group"
+            >
+              <Sparkles size={14} className="opacity-80" />
+              Upgrade Plan
+              <ArrowRight size={14} className="opacity-70 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
         </div>
       </div>
     );
@@ -61,11 +103,13 @@ const JobApplyPage = async ({ params }) => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#030303] text-zinc-900 dark:text-zinc-50 relative overflow-hidden transition-colors duration-500 font-sans">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[500px] bg-indigo-500/[0.04] dark:bg-indigo-600/[0.05] blur-[160px] rounded-full pointer-events-none" />
+      {/* Premium Ambient Background Mesh */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[500px] bg-indigo-500/[0.03] dark:bg-indigo-600/[0.04] blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000002_1px,transparent_1px),linear-gradient(to_bottom,#00000002_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="relative z-10">
         <FadeUpWrapper delay={0.1}>
-         {renderContent}
+          {renderContent}
         </FadeUpWrapper>
       </div>
     </div>

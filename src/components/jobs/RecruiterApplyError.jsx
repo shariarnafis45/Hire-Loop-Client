@@ -38,7 +38,7 @@ const RecruiterApplyError = ({ jobId,userRole }) => {
                {userRole}
               </span>
             </p>
-          </div>
+          </div>  
         </StaggerItem>
 
   
