@@ -1,13 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Crown, BarChart3, Zap, Plus, ArrowRight, ChevronDown } from "lucide-react";
+import {
+  Crown,
+  BarChart3,
+  Zap,
+  Plus,
+  ArrowRight,
+  ChevronDown,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FadeUpWrapper, StaggerContainer, StaggerItem } from "@/components/animation/MotionWrappers";
+import {
+  FadeUpWrapper,
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/animation/MotionWrappers";
 
 const seekerPlans = [
   {
     name: "Free",
+    planId : 'seeker_free',
     icon: Crown,
     iconColor: "text-zinc-600 dark:text-zinc-400",
     iconBg: "bg-zinc-100 dark:bg-zinc-800",
@@ -24,6 +36,7 @@ const seekerPlans = [
   },
   {
     name: "Pro",
+    planId : 'seeker_pro',
     icon: BarChart3,
     iconColor: "text-indigo-600 dark:text-indigo-500",
     iconBg: "bg-indigo-100 dark:bg-indigo-500/10",
@@ -40,6 +53,7 @@ const seekerPlans = [
   },
   {
     name: "Premium",
+    planId : 'seeker_premium',
     icon: Zap,
     iconColor: "text-amber-600 dark:text-amber-500",
     iconBg: "bg-amber-100 dark:bg-amber-500/10",
@@ -60,6 +74,7 @@ const seekerPlans = [
 const recruiterPlans = [
   {
     name: "Free",
+    planId : 'recruiter_free',
     icon: Crown,
     iconColor: "text-zinc-600 dark:text-zinc-400",
     iconBg: "bg-zinc-100 dark:bg-zinc-800",
@@ -75,6 +90,7 @@ const recruiterPlans = [
   },
   {
     name: "Growth",
+    planId : 'recruiter_growth',
     icon: BarChart3,
     iconColor: "text-indigo-600 dark:text-indigo-500",
     iconBg: "bg-indigo-100 dark:bg-indigo-500/10",
@@ -91,6 +107,7 @@ const recruiterPlans = [
   },
   {
     name: "Enterprise",
+     planId : 'recruiter_enterprise',
     icon: Zap,
     iconColor: "text-amber-600 dark:text-amber-500",
     iconBg: "bg-amber-100 dark:bg-amber-500/10",
@@ -112,19 +129,23 @@ const recruiterPlans = [
 const faqItems = [
   {
     question: "Can I switch plans at any time?",
-    answer: "Yes, you can upgrade, downgrade, or switch between plans instantly from your account billing dashboard. Changes apply to the subsequent billing cycle.",
+    answer:
+      "Yes, you can upgrade, downgrade, or switch between plans instantly from your account billing dashboard. Changes apply to the subsequent billing cycle.",
   },
   {
     question: "What is your refund policy?",
-    answer: "We offer a 14-day money-back guarantee for all premium subscriptions if the features do not satisfy your current placement needs.",
+    answer:
+      "We offer a 14-day money-back guarantee for all premium subscriptions if the features do not satisfy your current placement needs.",
   },
   {
     question: "Which payment methods do you accept?",
-    answer: "We accept all major global credit cards, debit cards, PayPal, and secure merchant processing endpoints powered via Stripe infrastructure.",
+    answer:
+      "We accept all major global credit cards, debit cards, PayPal, and secure merchant processing endpoints powered via Stripe infrastructure.",
   },
   {
     question: "How does plan cancellation work?",
-    answer: "Upon cancellation, your premium privileges will remain active until the end of your current paid tracking period. No auto-renewal charges will occur.",
+    answer:
+      "Upon cancellation, your premium privileges will remain active until the end of your current paid tracking period. No auto-renewal charges will occur.",
   },
 ];
 
@@ -171,7 +192,7 @@ const PricingSection = () => {
             >
               For Job Seekers
             </button>
-            
+
             <button
               onClick={() => setActiveTab("recruiters")}
               className={`rounded-full px-6 py-2.5 text-sm font-bold transition-all duration-300 ${
@@ -222,14 +243,16 @@ const PricingSection = () => {
                       <div>
                         <div className="flex items-center justify-between mb-8">
                           <div className="flex items-center gap-3">
-                            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${plan.iconBg}`}>
+                            <div
+                              className={`flex h-10 w-10 items-center justify-center rounded-xl ${plan.iconBg}`}
+                            >
                               <Icon className={plan.iconColor} size={18} />
                             </div>
                             <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
                               {plan.name}
                             </h3>
                           </div>
-                          
+
                           <div className="flex items-baseline relative justify-end">
                             <span className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">
                               $
@@ -249,7 +272,10 @@ const PricingSection = () => {
 
                         <ul className="space-y-4 mb-10">
                           {plan.features.map((feature, fIndex) => (
-                            <li key={fIndex} className="flex items-start gap-3 text-[13px] text-zinc-700 dark:text-zinc-300 font-semibold">
+                            <li
+                              key={fIndex}
+                              className="flex items-start gap-3 text-[13px] text-zinc-700 dark:text-zinc-300 font-semibold"
+                            >
                               <div className="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-zinc-100 border border-zinc-200 text-zinc-600 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400">
                                 <Plus size={10} strokeWidth={3} />
                               </div>
@@ -258,9 +284,13 @@ const PricingSection = () => {
                           ))}
                         </ul>
                       </div>
-
-                      <button
-                        className={`
+                      <form action="/api/checkout_sessions" method="POST">
+                        <section>
+                          <input type="hidden" name="plan_id" value={plan.planId} />
+                          <button
+                            type="submit"
+                            role="link"
+                            className={`
                           flex h-12 w-full items-center justify-center gap-2 rounded-xl
                           text-sm font-black transition-all duration-300 active:scale-[0.98] uppercase tracking-wider
                           ${
@@ -269,10 +299,16 @@ const PricingSection = () => {
                               : "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:border dark:border-zinc-800/60 dark:hover:bg-zinc-800 dark:hover:text-white"
                           }
                         `}
-                      >
-                        {plan.buttonText}
-                        <ArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform" size={14} strokeWidth={2.5} />
-                      </button>
+                          >
+                            {plan.buttonText}
+                            <ArrowRight
+                              className="opacity-70 group-hover:translate-x-1 transition-transform"
+                              size={14}
+                              strokeWidth={2.5}
+                            />
+                          </button>
+                        </section>
+                      </form>
                     </div>
                   </StaggerItem>
                 );
@@ -288,7 +324,8 @@ const PricingSection = () => {
                 Frequently Asked Questions
               </h3>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 font-medium">
-                Everything you need to know about configurations and access control.
+                Everything you need to know about configurations and access
+                control.
               </p>
             </div>
           </FadeUpWrapper>
@@ -305,7 +342,10 @@ const PricingSection = () => {
                       className="w-full flex items-center justify-between p-6 text-left font-bold text-zinc-900 dark:text-white text-sm sm:text-base select-none"
                     >
                       <span>{faq.question}</span>
-                      <ChevronDown size={16} className={`text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown
+                        size={16}
+                        className={`text-zinc-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                      />
                     </button>
 
                     <AnimatePresence initial={false}>
@@ -328,7 +368,6 @@ const PricingSection = () => {
             })}
           </StaggerContainer>
         </div>
-
       </div>
     </section>
   );
