@@ -55,6 +55,7 @@ const JobApplyForm = ({ jobData, applicant }) => {
       jobId: jobData._id,
       jobTitle: jobData.title,
       companyName: jobData.companyName,
+      applicantId: applicant.id,
       applicantName: applicant.name,
       applicantEmail: applicant.email,
     };
@@ -84,7 +85,6 @@ const JobApplyForm = ({ jobData, applicant }) => {
       ));
 
       router.push("/jobs");
-      
     } catch (error) {
       toast.dismiss(loadingToast);
 
