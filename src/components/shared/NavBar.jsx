@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, ChevronDown, LayoutDashboard, Briefcase, Settings, CheckCircle } from "lucide-react";
+import {
+  Menu,
+  X,
+  LogOut,
+  ChevronDown,
+  LayoutDashboard,
+  Briefcase,
+  Settings,
+  CheckCircle,
+} from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Avatar, Button } from "@heroui/react";
 import toast from "react-hot-toast";
@@ -11,29 +20,44 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThemeSwitch from "../ui/ThemeSwitch";
 import { authClient } from "@/lib/auth-client";
 
-const navLinks = [
-  { name: "Browse Jobs", href: "/jobs" },
-  { name: "Companies", href: "/companies" },
-  { name: "Pricing", href: "/pricing" },
-];
-
-const privateLinks = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "My Applications", href: "/dashboard/applications", icon: Briefcase },
-  { name: "Account Settings", href: "/dashboard/settings", icon: Settings },
-];
-
 const NavBar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
-  
+  const navLinks = [
+    { name: "Browse Jobs", href: "/jobs" },
+    { name: "Companies", href: "/companies" },
+    { name: "Pricing", href: "/pricing" },
+  ];
+
+  const privateLinks = [
+    {
+      name: "My Applications",
+      href: "/dashboard/applications",
+      icon: Briefcase,
+    },
+    { name: "Account Settings", href: "/dashboard/settings", icon: Settings },
+  ];
+
+  const dashboardLinks = {
+    seeker: "/dashboard/seeker",
+    recruiter: "/dashboard/recruiter",
+  };
+
+  if (user?.email) {
+    privateLinks.unshift({
+      name: "Dashboard",
+      href: dashboardLinks[user?.role || "seeker"],
+      icon: LayoutDashboard,
+    });
+  }
+
   const pathname = usePathname();
   const router = useRouter();
-  
+
   const [open, setOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
-  
+
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -48,7 +72,7 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     await authClient.signOut();
-    
+
     toast.custom((t) => (
       <div
         className={`${
@@ -71,7 +95,7 @@ const NavBar = () => {
 
     setOpen(false);
     setIsDropdownOpen(false);
-    router.refresh()
+    router.refresh();
   };
 
   return (
@@ -118,22 +142,30 @@ const NavBar = () => {
                   hover:text-zinc-950 dark:hover:text-white`}
                 >
                   {item.name}
-                  
+
                   {/* Floating Hover Background */}
                   {hoveredLink === item.href && (
                     <motion.span
                       layoutId="navHover"
                       className="absolute inset-x-[-12px] inset-y-[-4px] rounded-lg bg-zinc-100 dark:bg-white/5 -z-10"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
                     />
                   )}
 
                   {/* Magnetic Active Underline */}
                   {active && (
-                    <motion.span 
+                    <motion.span
                       layoutId="activeUnderline"
-                      className="absolute -bottom-[2px] left-0 h-[2px] w-full rounded-full bg-violet-500" 
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="absolute -bottom-[2px] left-0 h-[2px] w-full rounded-full bg-violet-500"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
                     />
                   )}
                 </Link>
@@ -180,9 +212,9 @@ const NavBar = () => {
                     </h4>
                   </div>
 
-                  <ChevronDown 
-                    size={14} 
-                    className={`text-zinc-500 dark:text-zinc-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} 
+                  <ChevronDown
+                    size={14}
+                    className={`text-zinc-500 dark:text-zinc-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
                   />
                 </div>
 
@@ -235,7 +267,10 @@ const NavBar = () => {
                                 transition-colors
                               "
                             >
-                              <Icon size={15} className="text-zinc-500 dark:text-zinc-400" />
+                              <Icon
+                                size={15}
+                                className="text-zinc-500 dark:text-zinc-400"
+                              />
                               {link.name}
                             </Link>
                           );
@@ -264,11 +299,17 @@ const NavBar = () => {
               </div>
             ) : (
               <>
-                <Link href="/auth/signin" className="text-sm font-medium text-violet-600 dark:text-violet-400 transition-colors hover:text-violet-700 dark:hover:text-violet-300">
+                <Link
+                  href="/auth/signin"
+                  className="text-sm font-medium text-violet-600 dark:text-violet-400 transition-colors hover:text-violet-700 dark:hover:text-violet-300"
+                >
                   Sign In
                 </Link>
                 <div className="h-5 w-px bg-zinc-200 dark:bg-white/10" />
-                <Link href="/auth/signup" className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-6 text-sm font-semibold text-white transition-all duration-300 hover:bg-violet-500 hover:shadow-[0_0_30px_rgba(124,58,237,0.35)] active:scale-[0.98]">
+                <Link
+                  href="/auth/signup"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-6 text-sm font-semibold text-white transition-all duration-300 hover:bg-violet-500 hover:shadow-[0_0_30px_rgba(124,58,237,0.35)] active:scale-[0.98]"
+                >
                   Get Started
                 </Link>
               </>
@@ -380,7 +421,7 @@ const NavBar = () => {
                         {link.name}
                       </Link>
                     ))}
-                    
+
                     <Button
                       onClick={handleLogout}
                       className="
@@ -396,10 +437,18 @@ const NavBar = () => {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2 pt-2 border-t border-zinc-200/60 dark:border-white/5">
-                    <Link href="/auth/signin" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-center text-sm font-medium text-violet-600 dark:text-violet-400">
+                    <Link
+                      href="/auth/signin"
+                      onClick={() => setOpen(false)}
+                      className="rounded-xl px-4 py-3 text-center text-sm font-medium text-violet-600 dark:text-violet-400"
+                    >
                       Sign In
                     </Link>
-                    <Link href="/auth/signup" onClick={() => setOpen(false)} className="rounded-xl bg-violet-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-violet-500">
+                    <Link
+                      href="/auth/signup"
+                      onClick={() => setOpen(false)}
+                      className="rounded-xl bg-violet-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-violet-500"
+                    >
                       Get Started
                     </Link>
                   </div>
@@ -408,7 +457,6 @@ const NavBar = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </header>
   );

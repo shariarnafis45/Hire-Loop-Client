@@ -12,25 +12,14 @@ import {
   LogOut,
   Crown,
   CheckCircle,
+  Search,
+  Bookmark,
+  CreditCard,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { authClient, useSession } from "@/lib/auth-client";
-
-// Recruiter sidebar links
-const sidebarLinks = [
-  { name: "Dashboard", href: "/dashboard/recruiter", icon: LayoutDashboard },
-  { name: "My Company", href: "/dashboard/recruiter/companies", icon: Building2 },
-  { name: "Manage Jobs", href: "/dashboard/recruiter/jobs", icon: Briefcase },
-  {
-    name: "Applications",
-    href: "/dashboard/recruiter/applications",
-    icon: FileText,
-    badge: "12",
-  },
-  { name: "Settings", href: "/dashboard/recruiter/settings", icon: Settings },
-];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
@@ -39,6 +28,48 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   // Fetching real user from Better Auth
   const { data: session, isPending } = useSession();
   const user = session?.user;
+  // Recruiter sidebar links
+  const recruiterSidebarLinks = [
+    { name: "Dashboard", href: "/dashboard/recruiter", icon: LayoutDashboard },
+    {
+      name: "My Company",
+      href: "/dashboard/recruiter/companies",
+      icon: Building2,
+    },
+    { name: "Manage Jobs", href: "/dashboard/recruiter/jobs", icon: Briefcase },
+    {
+      name: "Applications",
+      href: "/dashboard/recruiter/applications",
+      icon: FileText,
+      badge: "12",
+    },
+    { name: "Settings", href: "/dashboard/recruiter/settings", icon: Settings },
+  ];
+
+  // Job Seeker sidebar links
+  const seekerSidebarLinks = [
+    { name: "Dashboard", href: "/dashboard/seeker", icon: LayoutDashboard },
+    { name: "Jobs", href: "/dashboard/seeker/jobs", icon: Search },
+    {
+      name: "Saved Jobs",
+      href: "/dashboard/seeker/saved-jobs",
+      icon: Bookmark,
+    },
+    {
+      name: "Applications",
+      href: "/dashboard/seeker/applications",
+      icon: FileText,
+    },
+    { name: "Billing", href: "/dashboard/seeker/billing", icon: CreditCard },
+    { name: "Settings", href: "/dashboard/seeker/settings", icon: Settings },
+  ];
+
+  const sidebarLinksMap = {
+    seeker: seekerSidebarLinks,
+    recruiter: recruiterSidebarLinks,
+  };
+
+  const sidebarLinks = sidebarLinksMap[user?.role || "seeker"];
 
   // Fallback Initials
   const getInitials = (name) => {

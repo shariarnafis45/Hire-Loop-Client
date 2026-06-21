@@ -29,7 +29,7 @@ const SignupPage = () => {
     name: "",
     email: "",
     password: "",
-    role: "seeker", // Default role set to seeker
+    role: "seeker",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -55,13 +55,15 @@ const SignupPage = () => {
       },
     });
 
+    const plan = formData.role === "seeker" ? "seeker_free" : "recruiter_free";
+
     try {
       const { data, error } = await authClient.signUp.email({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: formData.role, // Added role to payload
-      
+        role: formData.role,
+        plan,
       });
 
       toast.dismiss(loadingToast);
