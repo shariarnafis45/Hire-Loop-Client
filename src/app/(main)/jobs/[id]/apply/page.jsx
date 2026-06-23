@@ -26,10 +26,11 @@ const JobApplyPage = async ({ params }) => {
 
   const planData = await getPlanById(user?.plan || "seeker_free");
   const plan = planData[0];
-  console.log(plan);
 
   const currentCount = applicantAppliedJobs.length;
-  const isLimitOver = currentCount >= plan.maxApplicationsCount;
+  const isLimitOver =
+    plan.maxApplicationsCount !== -1 &&
+    currentCount >= plan.maxApplicationsCount;
 
   let renderContent;
 

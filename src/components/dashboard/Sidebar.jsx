@@ -15,6 +15,8 @@ import {
   Search,
   Bookmark,
   CreditCard,
+  Users,
+  Banknote,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -64,9 +66,44 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { name: "Settings", href: "/dashboard/seeker/settings", icon: Settings },
   ];
 
+  // Admin sidebar links
+  const adminSidebarLinks = [
+    {
+      name: "Dashboard",
+      href: "/dashboard/admin",
+      icon: LayoutDashboard,
+    },
+    {
+      name: "Users",
+      href: "/dashboard/admin/users",
+      icon: Users,
+    },
+    {
+      name: "Companies",
+      href: "/dashboard/admin/companies",
+      icon: Building2,
+    },
+    {
+      name: "Jobs",
+      href: "/dashboard/admin/jobs",
+      icon: Briefcase,
+    },
+    {
+      name: "Payments",
+      href: "/dashboard/admin/payments",
+      icon: Banknote,
+    },
+    {
+      name: "Settings",
+      href: "/dashboard/admin/settings",
+      icon: Settings,
+    },
+  ];
+
   const sidebarLinksMap = {
     seeker: seekerSidebarLinks,
     recruiter: recruiterSidebarLinks,
+    admin: adminSidebarLinks,
   };
 
   const sidebarLinks = sidebarLinksMap[user?.role || "seeker"];

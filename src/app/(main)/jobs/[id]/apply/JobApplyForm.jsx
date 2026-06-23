@@ -58,6 +58,7 @@ const JobApplyForm = ({ jobData, applicant }) => {
       applicantId: applicant.id,
       applicantName: applicant.name,
       applicantEmail: applicant.email,
+      status: "applied",
     };
 
     try {

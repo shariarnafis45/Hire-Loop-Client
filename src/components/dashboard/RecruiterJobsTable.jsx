@@ -16,12 +16,12 @@ import toast from "react-hot-toast";
 export default function RecruiterJobsTable({ jobs }) {
   const handleEdit = (id) => {
     toast.success(`Redirecting to edit job: ${id}`);
-    // Router push operation logic implementation pore korte parben here
+   
   };
 
   const handleCloseJob = (id) => {
     toast.error(`Closing action triggered for: ${id}`);
-    // State management callback or server action triggered route eikhane asbe
+    
   };
 
   if (!jobs || jobs.length === 0) {
