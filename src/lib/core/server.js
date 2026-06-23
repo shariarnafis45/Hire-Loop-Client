@@ -1,8 +1,8 @@
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
-export const serverMuting = async (path, data) => {
+export const serverMuting = async (path, data, methood = "POST") => {
   const res = await fetch(`${serverUrl}${path}`, {
-    method: "POST",
+    method: methood,
     headers: {
       "content-type": "application/json",
     },
