@@ -4,6 +4,7 @@ import { getLoggedInRecruiterCompanies } from '@/lib/api/companies';
 
 const RecruiterNewJobAddPage = async() => {
     const company = await getLoggedInRecruiterCompanies();
+   
     
    
     return (
