@@ -12,8 +12,8 @@ export const getCompanyJobs = async (companyId, status = "active") => {
 
 // get all jobs
 
-export const getJobs = async () => {
-  return serverFetch(`/api/jobs`);
+export const getJobs = async (query) => {
+  return serverFetch(`/api/jobs?${query}`);
 };
 
 // get specific job by id
