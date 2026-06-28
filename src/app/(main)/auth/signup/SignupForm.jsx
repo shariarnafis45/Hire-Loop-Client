@@ -60,8 +60,8 @@ const SignupForm = ({ redirectTo = "/" }) => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: formData.role,
-        plan,
+        tempRole: formData.role,
+        plan: plan,
       });
 
       toast.dismiss(loadingToast);
@@ -108,7 +108,7 @@ const SignupForm = ({ redirectTo = "/" }) => {
           </div>
         </div>
       ));
-      
+
       router.push(redirectTo);
 
       setFormData({ name: "", email: "", password: "", role: "seeker" });

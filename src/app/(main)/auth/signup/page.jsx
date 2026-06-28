@@ -1,9 +1,9 @@
-import SignupForm from "./SignupForm";
+  import SignupForm from "./SignupForm";
 
-export default async function SignupPage({ searchParams }) {
-  
-  const params = await searchParams;
-  const redirectTo = params?.redirect || "/";
+  export default async function SignupPage({ searchParams }) {
+    
+    const params = await searchParams;
+    const redirectTo = params?.redirect || "/";
 
-  return <SignupForm redirectTo={redirectTo} />;
-}
+    return <SignupForm redirectTo={redirectTo} />;
+  }

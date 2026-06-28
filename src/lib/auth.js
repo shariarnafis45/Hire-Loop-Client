@@ -13,15 +13,32 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  plugins: [admin()],
   user: {
     additionalFields: {
-      role: {
-        defaultValue: "seeker",
+      tempRole: {
+        type: "string",
+        required: false,
       },
       plan: {
+        type: "string",
         defaultValue: "seeker_free",
       },
     },
   },
-  plugins: [admin()],
+
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          return {
+            data: {
+              ...user,
+              role: user.tempRole || "seeker",
+            },
+          };
+        },
+      },
+    },
+  },
 });
